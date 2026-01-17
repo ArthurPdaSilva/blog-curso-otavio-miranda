@@ -1,32 +1,37 @@
-import { cacheLife, cacheTag } from "next/cache";
 import { notFound } from "next/navigation";
 
 const BASE_URL = process.env.BASE_API_URL ?? "http://localhost:3000";
 
+// 30 min
+const REVALIDATE_MINUTES = 30 * 60;
+
 /**
  * Busca um post específico para o Admin.
- * Cache no Next, Suspense-friendly, revalidável via tag.
+ * Agora usa cache via fetch (100% compatível com Suspense + streaming).
  */
 export async function findByIdAdmin(id: string) {
-  "use cache";
-  cacheLife("minutes");
-  cacheTag(`admin-post-${id}`);
-  const res = await fetch(`${BASE_URL}/api/admin/posts/${id}`);
+  const res = await fetch(`${BASE_URL}/api/admin/posts/${id}`, {
+    next: {
+      tags: [`admin-post-${id}`],
+      revalidate: REVALIDATE_MINUTES,
+    },
+  });
 
   if (res.status === 404) notFound();
-
   return res.json();
 }
 
 /**
  * Busca todos os posts para o Admin.
- * Cache server-side, Suspense-friendly e com tag própria.
+ * Cache via fetch — evita bloquear Suspense.
  */
 export async function findAllPostsAdmin() {
-  "use cache";
-  cacheLife("minutes");
-  cacheTag("admin-posts");
-  const res = await fetch(`${BASE_URL}/api/admin/posts`);
+  const res = await fetch(`${BASE_URL}/api/admin/posts`, {
+    next: {
+      tags: ["admin-posts"],
+      revalidate: REVALIDATE_MINUTES,
+    },
+  });
 
   const json = await res.json();
   return json.data;
@@ -34,13 +39,15 @@ export async function findAllPostsAdmin() {
 
 /**
  * Busca todos os posts publicados.
- * Usa cache do Next (não React Cache), permite Suspense e revalidateTag("posts").
+ * Compatível com Suspense, streaming e revalidateTag("posts").
  */
 export async function findAllPostsPublic() {
-  "use cache";
-  cacheLife("minutes");
-  cacheTag("posts");
-  const res = await fetch(`${BASE_URL}/api/posts`);
+  const res = await fetch(`${BASE_URL}/api/posts`, {
+    next: {
+      tags: ["posts"],
+      revalidate: REVALIDATE_MINUTES,
+    },
+  });
 
   const json = await res.json();
   return json.data;
@@ -48,15 +55,16 @@ export async function findAllPostsPublic() {
 
 /**
  * Busca um post por slug.
- * Usa cache do Next, não cache React.
+ * Não bloqueia Suspense.
  */
 export async function findBySlugPublic(slug: string) {
-  "use cache";
-  cacheLife("minutes");
-  cacheTag(`post-${slug}`);
-  const res = await fetch(`${BASE_URL}/api/posts/${slug}`);
+  const res = await fetch(`${BASE_URL}/api/posts/${slug}`, {
+    next: {
+      tags: [`post-${slug}`],
+      revalidate: REVALIDATE_MINUTES,
+    },
+  });
 
   if (res.status === 404) notFound();
-
   return res.json();
 }

@@ -9,7 +9,7 @@ import type { PostRepository } from "./post-repository";
 
 export class DrizzlePostRepository implements PostRepository {
   async findAllPublished(): Promise<PostModel[]> {
-    // await asyncDelay(5000, true);
+    await asyncDelay(5000, true);
     logColor("[DrizzlePostRepository] findAllPublished");
     const posts = await drizzleDb.query.posts.findMany({
       orderBy: desc(postTable.createdAt),
@@ -19,7 +19,7 @@ export class DrizzlePostRepository implements PostRepository {
   }
 
   async findBySlugPublic(slug: string): Promise<PostModel> {
-    // await asyncDelay(5000, true);
+    await asyncDelay(5000, true);
     logColor("[DrizzlePostRepository] findBySlugPublic");
     const post = await drizzleDb.query.posts.findFirst({
       where: and(eq(postTable.slug, slug), eq(postTable.published, true)),
@@ -38,7 +38,7 @@ export class DrizzlePostRepository implements PostRepository {
   }
 
   async findById(id: string): Promise<PostModel> {
-    // await asyncDelay(5000, true);
+    await asyncDelay(5000, true);
     logColor("[DrizzlePostRepository] findById");
     const post = await drizzleDb.query.posts.findFirst({
       where: eq(postTable.id, id),
