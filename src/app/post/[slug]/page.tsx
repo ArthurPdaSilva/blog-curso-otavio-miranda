@@ -1,4 +1,4 @@
-import { SinglePost } from "@/components/SinglePost";
+import { SinglePost } from "@/components/Post/SinglePost";
 import { SpinLoader } from "@/components/SpinLoader";
 import { findBySlugPublic } from "@/lib/queries";
 import type { Metadata } from "next";

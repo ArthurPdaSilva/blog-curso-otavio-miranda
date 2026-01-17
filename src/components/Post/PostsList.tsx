@@ -1,5 +1,4 @@
 import { findAllPostsPublic } from "@/lib/queries";
-import type { PostModel } from "@/models/post/post-model";
 import { PostCoverImage } from "./PostCoverImage";
 import { PostSummary } from "./PostSummary";
 
@@ -12,7 +11,7 @@ import { PostSummary } from "./PostSummary";
 */
 
 export async function PostsList() {
-  const posts = (await findAllPostsPublic()) as PostModel[];
+  const posts = await findAllPostsPublic();
 
   return (
     <div className="grid grid-cols-1 gap-8 mb-16 sm:grid-cols-2 lg:grid-cols-3">

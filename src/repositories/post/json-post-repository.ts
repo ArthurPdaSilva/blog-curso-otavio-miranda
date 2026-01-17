@@ -5,6 +5,9 @@ import { resolve } from "node:path";
 import type { PostRepository } from "./post-repository";
 
 export class JsonPostRepository implements PostRepository {
+  async delete(_: string): Promise<PostModel> {
+    throw new Error("Method not implemented.");
+  }
   private async readFromDisk(): Promise<PostModel[]> {
     const ROOT_DIR = process.cwd();
     const JSON_POSTS_FILE_PATH = resolve(

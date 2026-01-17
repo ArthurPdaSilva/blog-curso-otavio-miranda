@@ -1,11 +1,10 @@
 import { findAllPostsAdmin } from "@/lib/queries";
-import type { PostModel } from "@/models/post/post-model";
 import clsx from "clsx";
 import Link from "next/link";
 import { DeletePostButton } from "./DeletePostButton";
 
 export async function PostListAdmin() {
-  const posts = (await findAllPostsAdmin()) as PostModel[];
+  const posts = await findAllPostsAdmin();
 
   return (
     <div className="mb-16">

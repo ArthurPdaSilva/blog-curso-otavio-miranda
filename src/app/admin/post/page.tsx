@@ -1,4 +1,4 @@
-import { PostListAdmin } from "@/components/PostListAdmin";
+import { PostListAdmin } from "@/components/Post/PostListAdmin";
 import { SpinLoader } from "@/components/SpinLoader";
 import type { Metadata } from "next";
 import { Suspense } from "react";
@@ -7,6 +7,8 @@ export const metadata: Metadata = {
   title: "Postes Admin",
   description: "Página de administração de postes",
 };
+
+export const dynamic = "force-dynamic";
 
 export default function AdminPostPage() {
   return (

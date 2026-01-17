@@ -1,8 +1,8 @@
 import { findBySlugPublic } from "@/lib/queries";
 import Image from "next/image";
+import { SafeMarkdown } from "../SafeMarkdown";
 import { PostDate } from "./PostDate";
 import { PostHeading } from "./PostHeading";
-import { SafeMarkdown } from "./SafeMarkdown";
 
 type SinglePostProps = {
   params: Promise<{ slug: string }>;
