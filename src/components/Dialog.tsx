@@ -23,7 +23,7 @@ export function Dialog({
   if (!isVisible) return null;
 
   function handleCancel() {
-    if (!disabled) return;
+    if (disabled) return;
     onCancel();
   }
 
