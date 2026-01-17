@@ -1,0 +1,16 @@
+# EditorConfig is awesome: https://EditorConfig.org
+
+# top-most EditorConfig file
+root = true
+
+# Todos os arquivos que a gente criar, vão vim com essas configurações por padrão
+
+[*]
+indent_style = space
+indent_size = 4
+# lf -> quebra de linha do linux/mac \n
+# crlf -> quebra de linha do windows \r\n
+end_of_line = crlf
+charset = utf-8
+trim_trailing_whitespace = ture
+insert_final_newline = true
