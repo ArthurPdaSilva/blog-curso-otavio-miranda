@@ -1,18 +1,18 @@
 import { eq } from "drizzle-orm";
 import { drizzleDb } from ".";
-import { postTable } from "./schema";
+import { postsTable } from "./schema";
 
 (async () => {
-  const posts = await drizzleDb.select().from(postTable);
+  const posts = await drizzleDb.select().from(postsTable);
 
   posts.forEach((post) => {
     console.log(post.slug);
   });
   await drizzleDb
-    .update(postTable)
+    .update(postsTable)
     .set({
       title: "Veja agora a rotina matinal de pessoas altamente eficazes",
       published: true,
     })
-    .where(eq(postTable.slug, "rotina-matinal-de-pessoas-altamente-eficazes"));
+    .where(eq(postsTable.slug, "rotina-matinal-de-pessoas-altamente-eficazes"));
 })();

@@ -1,10 +1,13 @@
 "use server";
 
 import { makePartialPublicPost, type PublicPost } from "@/dto/post";
+import { BASE_URL } from "@/lib/constants";
 import { PostCreateSchema } from "@/lib/validations";
 import type { PostModel } from "@/models/post/post-model";
 import { getZodErrorMessages } from "@/utils/get-zod-error-messages";
 import { makeSlugFromText } from "@/utils/make-slug-from-text";
+import { updateTag } from "next/cache";
+import { redirect } from "next/navigation";
 import { v4 as uuidV4 } from "uuid";
 
 type CreatePostActionState = {
@@ -43,8 +46,27 @@ export async function createPostAction(
     id: uuidV4(),
     slug: makeSlugFromText(validPostData.title),
   };
-  return {
-    formState: newPost,
-    errors: [],
-  };
+
+  try {
+    await fetch(`${BASE_URL}/api/admin/posts`, {
+      method: "POST",
+      body: JSON.stringify(newPost),
+    });
+  } catch (e: unknown) {
+    if (e instanceof Error) {
+      return {
+        formState: newPost,
+        errors: [e.message],
+      };
+    }
+
+    return {
+      formState: newPost,
+      errors: ["Erro desconhecido"],
+    };
+  }
+
+  updateTag("posts");
+  updateTag("admin-posts");
+  redirect(`/admin/post/${newPost.id}?created=1`);
 }

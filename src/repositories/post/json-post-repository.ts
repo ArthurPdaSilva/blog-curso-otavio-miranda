@@ -5,6 +5,16 @@ import { resolve } from "node:path";
 import type { PostRepository } from "./post-repository";
 
 export class JsonPostRepository implements PostRepository {
+  async create(_: PostModel): Promise<PostModel> {
+    throw new Error("Method not implemented.");
+  }
+
+  async update(
+    __: string,
+    _: Omit<PostModel, "id" | "slug" | "createdAt" | "updatedAt">,
+  ): Promise<PostModel> {
+    throw new Error("Method not implemented.");
+  }
   async delete(_: string): Promise<PostModel> {
     throw new Error("Method not implemented.");
   }

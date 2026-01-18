@@ -1,7 +1,7 @@
 import Database from "better-sqlite3";
 import { drizzle } from "drizzle-orm/better-sqlite3";
 import { resolve } from "node:path";
-import { postTable } from "./schema";
+import { postsTable } from "./schema";
 
 /*
   Notas Drizzle:
@@ -15,7 +15,7 @@ const sqliteDatabase = new Database(sqliteDatabasePath);
 
 export const drizzleDb = drizzle(sqliteDatabase, {
   schema: {
-    posts: postTable,
+    posts: postsTable,
   },
   logger: true,
 });

@@ -62,6 +62,7 @@ export function ManagePostForm(props: ManagePostFormProps) {
           placeholder="ID gerado automaticamente"
           type="text"
           readOnly
+          disabled={isPending}
           defaultValue={formState.id}
         />
         <InputText
@@ -70,6 +71,7 @@ export function ManagePostForm(props: ManagePostFormProps) {
           placeholder="Slug gerado automaticamente"
           type="text"
           readOnly
+          disabled={isPending}
           defaultValue={formState.slug}
         />
         <InputText
@@ -77,6 +79,7 @@ export function ManagePostForm(props: ManagePostFormProps) {
           name="author"
           placeholder="Digite o nome do autor"
           type="text"
+          disabled={isPending}
           defaultValue={formState.author}
         />
         <InputText
@@ -84,6 +87,7 @@ export function ManagePostForm(props: ManagePostFormProps) {
           name="title"
           placeholder="Digite o título"
           type="text"
+          disabled={isPending}
           defaultValue={formState.title}
         />
         <InputText
@@ -91,6 +95,7 @@ export function ManagePostForm(props: ManagePostFormProps) {
           name="excerpt"
           placeholder="Digite o resumo"
           type="text"
+          disabled={isPending}
           defaultValue={formState.excerpt}
         />
         <MarkdownEditor
@@ -107,6 +112,7 @@ export function ManagePostForm(props: ManagePostFormProps) {
           name="coverImageUrl"
           placeholder="Digite a url da imagem"
           type="text"
+          disabled={isPending}
           defaultValue={formState.coverImageUrl}
         />
 
@@ -114,9 +120,12 @@ export function ManagePostForm(props: ManagePostFormProps) {
           labelText="Publicar?"
           name="published"
           defaultChecked={formState.published}
+          disabled={isPending}
         />
         <div className="mt-4">
-          <Button type="submit">Enviar</Button>
+          <Button disabled={isPending} type="submit">
+            Enviar
+          </Button>
         </div>
       </div>
     </form>

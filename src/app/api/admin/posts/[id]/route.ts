@@ -1,3 +1,4 @@
+import { PostModel } from "@/models/post/post-model";
 import { postRepository } from "@/repositories/post";
 import { NextResponse } from "next/server";
 
@@ -36,6 +37,26 @@ export async function DELETE(
     console.error(err);
     return NextResponse.json(
       { error: "Error ao apagar post" },
+      { status: 500 },
+    );
+  }
+}
+
+export async function PUT(
+  req: Request,
+  { params }: { params: { id: string } },
+) {
+  try {
+    const id = params.id;
+    const post = (await req.json()) as PostModel;
+
+    const updatedPost = await postRepository.update(id, post);
+
+    return NextResponse.json({ data: updatedPost }, { status: 200 });
+  } catch (err) {
+    console.error(err);
+    return NextResponse.json(
+      { error: "Erro ao atualizar post" },
       { status: 500 },
     );
   }
