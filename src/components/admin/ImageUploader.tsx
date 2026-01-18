@@ -1,13 +1,15 @@
 "use client";
-
 import { uploadImageAction } from "@/actions/upload/uplooad-image-action";
-import { IMAGE_UPLOAD_MAX_SIZE } from "@/lib/constants";
 import { ImageUp } from "lucide-react";
 import { useRef, useState, useTransition } from "react";
 import { toast } from "react-toastify";
 import { Button } from "../Button";
 
-export function ImageUploader() {
+type ImageUploadProps = {
+  disabled?: boolean;
+};
+
+export function ImageUploader({ disabled }: ImageUploadProps) {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [isPending, startTransition] = useTransition();
   const [imgUrl, setImgUrl] = useState<string>("");
@@ -33,8 +35,9 @@ export function ImageUploader() {
       return;
     }
 
-    if (file.size > IMAGE_UPLOAD_MAX_SIZE) {
-      const readableMaxSize = IMAGE_UPLOAD_MAX_SIZE / 1024;
+    if (file.size > Number(process.env.NEXT_PUBLIC_IMAGE_UPLOAD_MAX_SIZE)) {
+      const readableMaxSize =
+        Number(process.env.NEXT_PUBLIC_IMAGE_UPLOAD_MAX_SIZE) / 1024;
       toast.error(`Imagem muito grande. Max: ${readableMaxSize}KB`);
 
       fileInput.value = "";
@@ -64,7 +67,7 @@ export function ImageUploader() {
   return (
     <div className="flex flex-col gap-4 py-4">
       <Button
-        disabled={isPending}
+        disabled={isPending || disabled}
         onClick={handleChooseFile}
         type="button"
         className="self-start"
@@ -83,6 +86,7 @@ export function ImageUploader() {
         </div>
       )}
       <input
+        disabled={isPending || disabled}
         onChange={handleChange}
         ref={fileInputRef}
         className="hidden"

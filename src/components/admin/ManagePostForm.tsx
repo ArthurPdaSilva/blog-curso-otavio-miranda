@@ -1,6 +1,8 @@
 "use client";
 import { createPostAction } from "@/actions/post/create-post-action";
+import { updatePostAction } from "@/actions/post/update-post-action";
 import { makePartialPublicPost, type PublicPost } from "@/dto/post";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useActionState, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Button } from "../Button";
@@ -24,6 +26,9 @@ type ManagePostFormProps =
 
 export function ManagePostForm(props: ManagePostFormProps) {
   const { mode } = props;
+  const searchParams = useSearchParams();
+  const created = searchParams.get("created");
+  const router = useRouter();
 
   let publicPost: undefined | PublicPost;
   if (mode === "update") {
@@ -38,8 +43,14 @@ export function ManagePostForm(props: ManagePostFormProps) {
     formState: makePartialPublicPost(publicPost),
     errors: [],
   };
+
+  const actionsMap = {
+    update: updatePostAction,
+    create: createPostAction,
+  };
+
   const [state, action, isPending] = useActionState(
-    createPostAction,
+    actionsMap[mode],
     initialState,
   );
 
@@ -50,6 +61,23 @@ export function ManagePostForm(props: ManagePostFormProps) {
       }
     }
   }, [state.errors]);
+
+  useEffect(() => {
+    if (state.success) {
+      toast.dismiss();
+      toast.success("Post atualizado com sucesso");
+    }
+  }, [state.success]);
+
+  useEffect(() => {
+    if (created === "1") {
+      toast.dismiss();
+      toast.success("Post criado com sucesso");
+      const url = new URL(window.location.href);
+      url.searchParams.delete("created");
+      router.replace(url.toString());
+    }
+  }, [created, router]);
 
   const { formState } = state;
 
@@ -105,7 +133,7 @@ export function ManagePostForm(props: ManagePostFormProps) {
           textAreaName="content"
         />
 
-        <ImageUploader />
+        <ImageUploader disabled={isPending} />
 
         <InputText
           labelText="Url da imagem de Capa"

@@ -1,7 +1,6 @@
 "use server";
 
 import { makePartialPublicPost, type PublicPost } from "@/dto/post";
-import { BASE_URL } from "@/lib/constants";
 import { PostCreateSchema } from "@/lib/validations";
 import type { PostModel } from "@/models/post/post-model";
 import { getZodErrorMessages } from "@/utils/get-zod-error-messages";
@@ -13,6 +12,7 @@ import { v4 as uuidV4 } from "uuid";
 type CreatePostActionState = {
   formState: PublicPost;
   errors: string[];
+  success?: string;
 };
 
 export async function createPostAction(
@@ -48,7 +48,7 @@ export async function createPostAction(
   };
 
   try {
-    await fetch(`${BASE_URL}/api/admin/posts`, {
+    await fetch(`${process.env.NEXT_BASE_URL}/api/admin/posts`, {
       method: "POST",
       body: JSON.stringify(newPost),
     });

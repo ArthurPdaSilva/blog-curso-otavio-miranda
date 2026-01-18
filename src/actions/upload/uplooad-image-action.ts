@@ -1,10 +1,4 @@
 "use server";
-
-import {
-  IMAGE_SERVER_URL,
-  IMAGE_UPLOAD_DIRECTORY,
-  IMAGE_UPLOAD_MAX_SIZE,
-} from "@/lib/constants";
 import { mkdir, writeFile } from "node:fs/promises";
 import { extname, resolve } from "node:path";
 
@@ -29,7 +23,7 @@ export async function uploadImageAction(
     return makeResult({ error: "Arquivo Inválido" });
   }
 
-  if (file.size > IMAGE_UPLOAD_MAX_SIZE) {
+  if (file.size > Number(process.env.NEXT_PUBLIC_IMAGE_UPLOAD_MAX_SIZE)) {
     return makeResult({ error: "Arquivo muito grande" });
   }
 
@@ -40,11 +34,8 @@ export async function uploadImageAction(
   const imageExtension = extname(file.name);
   const uniqueImageName = `${Date.now()}${imageExtension}`;
 
-  const uploadFullPath = resolve(
-    process.cwd(),
-    "public",
-    IMAGE_UPLOAD_DIRECTORY,
-  );
+  const uploadDir = process.env.IMAGE_UPLOAD_DIRECTORY || "uploads";
+  const uploadFullPath = resolve(process.cwd(), "public", uploadDir);
 
   //recursive: Indicates whether parent folders should be created. If a folder was created, the path to the first created folder will be returned.
   await mkdir(uploadFullPath, { recursive: true });
@@ -54,7 +45,8 @@ export async function uploadImageAction(
   const fileFullPath = resolve(uploadFullPath, uniqueImageName);
   await writeFile(fileFullPath, buffer);
 
-  const url = `${IMAGE_SERVER_URL}/${uniqueImageName}`;
-  console.log(url);
+  const imgServerUrl =
+    process.env.IMAGE_SERVER_URL || "http://localhost:3000/uploads";
+  const url = `${imgServerUrl}/${uniqueImageName}`;
   return makeResult({ url });
 }

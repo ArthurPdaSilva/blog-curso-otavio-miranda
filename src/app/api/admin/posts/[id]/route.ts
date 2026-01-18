@@ -1,4 +1,4 @@
-import { PostModel } from "@/models/post/post-model";
+import type { PostModel } from "@/models/post/post-model";
 import { postRepository } from "@/repositories/post";
 import { NextResponse } from "next/server";
 
@@ -44,10 +44,10 @@ export async function DELETE(
 
 export async function PUT(
   req: Request,
-  { params }: { params: { id: string } },
+  { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const id = params.id;
+    const id = (await params).id;
     const post = (await req.json()) as PostModel;
 
     const updatedPost = await postRepository.update(id, post);
