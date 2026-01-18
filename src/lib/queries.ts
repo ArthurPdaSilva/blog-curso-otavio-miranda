@@ -14,7 +14,8 @@ export async function findByIdAdmin(id: string): Promise<PostModel> {
   });
 
   if (res.status === 404) notFound();
-  return res.json();
+  const json = await res.json();
+  return json.data;
 }
 
 /**
@@ -59,5 +60,6 @@ export async function findBySlugPublic(slug: string): Promise<PostModel> {
   });
 
   if (res.status === 404) notFound();
-  return res.json();
+  const json = await res.json();
+  return json.data;
 }

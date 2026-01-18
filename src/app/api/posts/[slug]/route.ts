@@ -15,7 +15,7 @@ export async function GET(
       );
     }
 
-    return NextResponse.json(post);
+    return NextResponse.json({ data: post });
   } catch (err) {
     console.error(err);
     return NextResponse.json({ error: "Erro ao buscar post" }, { status: 500 });
