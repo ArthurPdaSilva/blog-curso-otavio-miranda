@@ -1,20 +1,24 @@
 "use client";
+import { logoutAction } from "@/actions/login/logout-action";
 import clsx from "clsx";
 import {
   CircleXIcon,
   FileTextIcon,
+  HourglassIcon,
   HouseIcon,
+  LogOutIcon,
   MenuIcon,
   PlusIcon,
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 
 export function MenuAdmin() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const pathName = usePathname();
+  const [isPending, startTransition] = useTransition();
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: false positive
   useEffect(() => {
@@ -42,6 +46,12 @@ export function MenuAdmin() {
     "text-blue-200 italic",
     "sm:hidden",
   );
+
+  function handleLogout() {
+    startTransition(async () => {
+      await logoutAction();
+    });
+  }
 
   return (
     <nav className={navClasses}>
@@ -77,6 +87,22 @@ export function MenuAdmin() {
         <PlusIcon />
         Criar Post
       </Link>
+
+      <button type="button" onClick={handleLogout} className={linkClasses}>
+        {isPending && (
+          <>
+            <HourglassIcon />
+            Aguarde...
+          </>
+        )}
+
+        {!isPending && (
+          <>
+            <LogOutIcon />
+            Sair
+          </>
+        )}
+      </button>
     </nav>
   );
 }

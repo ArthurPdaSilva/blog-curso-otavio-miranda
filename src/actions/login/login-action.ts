@@ -12,6 +12,14 @@ export async function loginAction(
   prevState: LoginActionState,
   formData: FormData,
 ): Promise<LoginActionState> {
+  const allowLogin = Boolean(Number(process.env.ALLOW_LOGIN));
+
+  if (!allowLogin) {
+    return {
+      username: "",
+      error: "Login não permitido",
+    };
+  }
   await asyncDelay(5000); // Vou manter (atrasar brute force)
 
   if (!(formData instanceof FormData)) {
