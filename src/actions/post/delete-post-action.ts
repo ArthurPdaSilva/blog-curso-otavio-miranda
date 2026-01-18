@@ -6,11 +6,13 @@ import { asyncDelay } from "@/utils/async-delay";
 import { logColor } from "@/utils/log-color";
 import { updateTag } from "next/cache";
 
-type Result = {
+type DeletePostActionResult = {
   error: string;
 };
 
-export async function deletePostAction(id: string): Promise<Result> {
+export async function deletePostAction(
+  id: string,
+): Promise<DeletePostActionResult> {
   await asyncDelay(2000);
   logColor(String(id));
 
