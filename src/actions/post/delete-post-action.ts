@@ -1,5 +1,5 @@
 "use server";
-
+import { verifyLoginSession } from "@/lib/login/manage-login";
 import type { PostModel } from "@/models/post/post-model";
 import { updateTag } from "next/cache";
 
@@ -10,6 +10,14 @@ type DeletePostActionResult = {
 export async function deletePostAction(
   id: string,
 ): Promise<DeletePostActionResult> {
+  const isAuthenticated = await verifyLoginSession();
+
+  if (!isAuthenticated) {
+    return {
+      error: "Faça login novamente em outra aba",
+    };
+  }
+
   if (!id || typeof id !== "string") {
     return {
       error: "Dados Inválidos",

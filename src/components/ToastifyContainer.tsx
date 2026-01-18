@@ -1,5 +1,4 @@
 "use client";
-
 import { Bounce, ToastContainer } from "react-toastify";
 
 export function ToastifyContainer() {
