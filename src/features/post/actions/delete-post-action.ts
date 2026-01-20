@@ -1,7 +1,8 @@
 "use server";
-import { verifyLoginSession } from "@/features/login/lib/manage-login";
-import type { PostModel } from "@/features/post/models/post-model";
+import { getLoginSessionForApi } from "@/features/login/lib/manage-login";
+import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
 import { updateTag } from "next/cache";
+import type { PublicPostForApiDto } from "../lib/schemas";
 
 type DeletePostActionResult = {
   error: string;
@@ -10,7 +11,7 @@ type DeletePostActionResult = {
 export async function deletePostAction(
   id: string,
 ): Promise<DeletePostActionResult> {
-  const isAuthenticated = await verifyLoginSession();
+  const isAuthenticated = await getLoginSessionForApi();
 
   if (!isAuthenticated) {
     return {
@@ -24,37 +25,40 @@ export async function deletePostAction(
     };
   }
 
-  let post: undefined | PostModel;
-  try {
-    const res = await fetch(
-      `${process.env.NEXT_BASE_URL}/api/admin/posts/${id}`,
-      {
-        method: "DELETE",
+  const postResponse = await authenticatedApiRequest<PublicPostForApiDto>(
+    `/post/me/${id}`,
+    {
+      headers: {
+        "Content-Type": "application/json",
       },
-    );
-    const json = await res.json();
-    post = json.data;
-  } catch (e: unknown) {
-    if (e instanceof Error) {
-      return {
-        error: e.message,
-      };
-    }
+    },
+  );
 
+  if (!postResponse.success) {
     return {
-      error: "Erro desconhecido",
+      error: "Erro ao encontrar post",
     };
   }
 
-  if (!post) {
+  const deletePostResponse = await authenticatedApiRequest<PublicPostForApiDto>(
+    `/post/me/${id}`,
+    {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    },
+  );
+
+  if (!deletePostResponse.success) {
     return {
-      error: "Post não encontrado",
+      error: "Erro ao apagar post",
     };
   }
 
   updateTag("posts");
   updateTag("admin-posts");
-  updateTag(`post-${post.slug}`);
+  updateTag(`post-${postResponse.data.slug}`);
 
   return {
     error: "",

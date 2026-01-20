@@ -1,6 +1,6 @@
 import { ManagePostForm } from "@/features/admin/components/ManagePostForm";
-import { makePublicPostFromDb } from "@/features/post/dto/post";
-import { findByIdAdmin } from "@/features/post/lib/queries";
+import { findPostByIdFromApiAdmin } from "@/features/post/lib/queries";
+import { PublicPostForApiSchema } from "@/features/post/lib/schemas";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 
@@ -17,10 +17,15 @@ export default async function AdminPostIdPage({
   params,
 }: AdminPostIdPageProps) {
   const { id } = await params;
-  const post = await findByIdAdmin(id).catch();
+  const postRes = await findPostByIdFromApiAdmin(id).catch();
 
-  if (!post) notFound();
-  const publicPost = makePublicPostFromDb(post);
+  if (!postRes.success) {
+    console.log(postRes.errors);
+    notFound();
+  }
+
+  const post = postRes.data;
+  const publicPost = PublicPostForApiSchema.parse(post);
 
   return (
     <div className="flex flex-col gap-6">

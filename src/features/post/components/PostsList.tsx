@@ -1,4 +1,4 @@
-import { findAllPostsPublic } from "../lib/queries";
+import { findAllPublicPostsFromApi } from "../lib/queries";
 import { PostCoverImage } from "./PostCoverImage";
 import { PostSummary } from "./PostSummary";
 
@@ -11,9 +11,19 @@ import { PostSummary } from "./PostSummary";
 */
 
 export async function PostsList() {
-  const posts = await findAllPostsPublic();
+  const postsRes = await findAllPublicPostsFromApi();
 
-  if (posts.length <= 1) return null;
+  if (!postsRes.success) {
+    return null;
+  }
+
+  const posts = postsRes.data;
+
+  if (posts.length <= 1) {
+    return null;
+  }
+
+  console.log(posts[0].coverImageUrl);
 
   return (
     <div className="grid grid-cols-1 gap-8 mb-16 sm:grid-cols-2 lg:grid-cols-3">

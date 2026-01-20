@@ -2,8 +2,8 @@
 import { createLoginSessionFromApi } from "@/features/login/lib/manage-login";
 import { LoginSchema } from "@/features/login/lib/schema";
 import { apiRequest } from "@/utils/api-request";
-import { asyncDelay } from "@/utils/async-delay";
 import { getZodErrorMessages } from "@/utils/get-zod-error-messages";
+import { verifyHoneypotInput } from "@/utils/verify-honeypot-input";
 import { redirect } from "next/navigation";
 
 type LoginActionState = {
@@ -15,6 +15,15 @@ export async function loginAction(
   _: LoginActionState,
   formData: FormData,
 ): Promise<LoginActionState> {
+  const isBot = await verifyHoneypotInput(formData, 5000);
+
+  if (isBot) {
+    return {
+      email: "",
+      errors: ["nice"],
+    };
+  }
+
   const allowLogin = Boolean(Number(process.env.ALLOW_LOGIN));
 
   if (!allowLogin) {
@@ -23,7 +32,6 @@ export async function loginAction(
       errors: ["Login não permitido"],
     };
   }
-  await asyncDelay(5000); // Vou manter (atrasar brute force)
 
   if (!(formData instanceof FormData)) {
     return {

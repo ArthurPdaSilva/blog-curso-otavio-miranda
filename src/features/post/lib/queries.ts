@@ -2,6 +2,7 @@ import type {
   PostModel,
   PostModelFromApi,
 } from "@/features/post/models/post-model";
+import { apiRequest } from "@/utils/api-request";
 import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
 import { notFound } from "next/navigation";
 
@@ -88,6 +89,17 @@ export async function findAllPostsPublic(): Promise<PostModel[]> {
   return json.data;
 }
 
+export const findAllPublicPostsFromApi = async () => {
+  const postsResponse = await apiRequest<PostModelFromApi[]>(`/post`, {
+    next: {
+      tags: ["posts"],
+      revalidate: Number(process.env.NEXT_REVALIDATE_MINUTES),
+    },
+  });
+
+  return postsResponse;
+};
+
 /**
  * Busca um post por slug.
  */
@@ -103,3 +115,14 @@ export async function findBySlugPublic(slug: string): Promise<PostModel> {
   const json = await res.json();
   return json.data;
 }
+
+export const findPublicPostBySlugFromApi = async (slug: string) => {
+  const postsResponse = await apiRequest<PostModelFromApi>(`/post/${slug}`, {
+    next: {
+      tags: [`post-${slug}`],
+      revalidate: 86400,
+    },
+  });
+
+  return postsResponse;
+};

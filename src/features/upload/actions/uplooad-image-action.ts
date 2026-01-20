@@ -1,7 +1,6 @@
 "use server";
-import { verifyLoginSession } from "@/features/login/lib/manage-login";
-import { mkdir, writeFile } from "node:fs/promises";
-import { extname, resolve } from "node:path";
+import { getLoginSessionForApi } from "@/features/login/lib/manage-login";
+import { authenticatedApiRequest } from "@/utils/authenticated-api-request";
 
 type UploadImageActionResult = {
   url: string;
@@ -14,7 +13,7 @@ export async function uploadImageAction(
 ): Promise<UploadImageActionResult> {
   const makeResult = ({ url = "", error = "" }) => ({ url, error });
 
-  const isAuthenticated = await verifyLoginSession();
+  const isAuthenticated = await getLoginSessionForApi();
 
   if (!isAuthenticated) {
     return makeResult({ error: "Faça login novamente" });
@@ -38,22 +37,18 @@ export async function uploadImageAction(
     return makeResult({ error: "Imagem inválida" });
   }
 
-  const imageExtension = extname(file.name);
-  const uniqueImageName = `${Date.now()}${imageExtension}`;
+  const uploadResponse = await authenticatedApiRequest<{ url: string }>(
+    `/upload`,
+    {
+      method: "POST",
+      body: formData,
+    },
+  );
 
-  const uploadDir = process.env.IMAGE_UPLOAD_DIRECTORY || "uploads";
-  const uploadFullPath = resolve(process.cwd(), "public", uploadDir);
+  if (!uploadResponse.success) {
+    return makeResult({ error: uploadResponse.errors[0] });
+  }
 
-  //recursive: Indicates whether parent folders should be created. If a folder was created, the path to the first created folder will be returned.
-  await mkdir(uploadFullPath, { recursive: true });
-
-  const fileArrayBuffer = await file.arrayBuffer();
-  const buffer = Buffer.from(fileArrayBuffer);
-  const fileFullPath = resolve(uploadFullPath, uniqueImageName);
-  await writeFile(fileFullPath, buffer);
-
-  const imgServerUrl =
-    process.env.IMAGE_SERVER_URL || "http://localhost:3000/uploads";
-  const url = `${imgServerUrl}/${uniqueImageName}`;
+  const url = `${process.env.IMAGE_SERVER_URL}${uploadResponse.data.url}`;
   return makeResult({ url });
 }

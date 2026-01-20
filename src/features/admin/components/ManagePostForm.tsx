@@ -6,9 +6,9 @@ import { MarkdownEditor } from "@/components/MarkdownEditor";
 import { createPostAction } from "@/features/post/actions/create-post-action";
 import { updatePostAction } from "@/features/post/actions/update-post-action";
 import {
-  makePartialPublicPost,
-  type PublicPost,
-} from "@/features/post/dto/post";
+  PublicPostForApiSchema,
+  type PublicPostForApiDto,
+} from "@/features/post/lib/schemas";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useActionState, useEffect, useState } from "react";
 import { toast } from "react-toastify";
@@ -16,7 +16,7 @@ import { ImageUploader } from "./ImageUploader";
 
 type ManagePostFormUpdateProps = {
   mode: "update";
-  publicPost: PublicPost;
+  publicPost: PublicPostForApiDto;
 };
 
 type ManagePostFormCreateProps = {
@@ -33,7 +33,7 @@ export function ManagePostForm(props: ManagePostFormProps) {
   const created = searchParams.get("created");
   const router = useRouter();
 
-  let publicPost: undefined | PublicPost;
+  let publicPost: undefined | PublicPostForApiDto;
   if (mode === "update") {
     publicPost = props.publicPost;
   }
@@ -43,7 +43,7 @@ export function ManagePostForm(props: ManagePostFormProps) {
   );
 
   const initialState = {
-    formState: makePartialPublicPost(publicPost),
+    formState: PublicPostForApiSchema.parse(publicPost || {}),
     errors: [],
   };
 
@@ -106,14 +106,6 @@ export function ManagePostForm(props: ManagePostFormProps) {
           defaultValue={formState.slug}
         />
         <InputText
-          labelText="Autor"
-          name="author"
-          placeholder="Digite o nome do autor"
-          type="text"
-          disabled={isPending}
-          defaultValue={formState.author}
-        />
-        <InputText
           labelText="Título"
           name="title"
           placeholder="Digite o título"
@@ -147,12 +139,15 @@ export function ManagePostForm(props: ManagePostFormProps) {
           defaultValue={formState.coverImageUrl}
         />
 
-        <InputCheckbox
-          labelText="Publicar?"
-          name="published"
-          defaultChecked={formState.published}
-          disabled={isPending}
-        />
+        {mode === "update" && (
+          <InputCheckbox
+            labelText="Publicar?"
+            name="published"
+            defaultChecked={formState.published}
+            disabled={isPending}
+          />
+        )}
+
         <div className="mt-4">
           <Button disabled={isPending} type="submit">
             Enviar

@@ -1,20 +1,28 @@
 /** biome-ignore-all assist/source/organizeImports: false positive */
 import ErrorMessage from "@/components/ErrorMessage";
-import { findAllPostsPublic } from "@/features/post/lib/queries";
+import { findAllPublicPostsFromApi } from "@/features/post/lib/queries";
 import clsx from "clsx";
 import { PostCoverImage } from "./PostCoverImage";
 import { PostSummary } from "./PostSummary";
 
 export async function PostFeatured() {
-  const posts = await findAllPostsPublic();
+  const postsRes = await findAllPublicPostsFromApi();
+  const noPostsFound = (
+    <ErrorMessage
+      contentTitle="Ops 😅"
+      content="Ainda não criamos nenhum post."
+    />
+  );
 
-  if (posts.length <= 0)
-    return (
-      <ErrorMessage
-        contentTitle="Ops 😅"
-        content="Ainda não criamos nenhum post."
-      />
-    );
+  if (!postsRes.success) {
+    return noPostsFound;
+  }
+
+  const posts = postsRes.data;
+
+  if (posts.length <= 0) {
+    return noPostsFound;
+  }
 
   const post = posts[0];
   const postLink = `/post/${post.slug}`;

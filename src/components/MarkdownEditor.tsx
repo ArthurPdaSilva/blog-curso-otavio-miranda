@@ -43,6 +43,7 @@ export function MarkdownEditor({
         height={400}
         extraCommands={[]}
         preview="edit"
+        data-color-mode="light"
         hideToolbar={disabled}
         textareaProps={{
           id,

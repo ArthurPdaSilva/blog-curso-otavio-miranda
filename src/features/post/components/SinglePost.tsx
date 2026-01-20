@@ -1,6 +1,7 @@
 import { SafeMarkdown } from "@/components/SafeMarkdown";
-import { findBySlugPublic } from "@/features/post/lib/queries";
+import { findPublicPostBySlugFromApi } from "@/features/post/lib/queries";
 import Image from "next/image";
+import { notFound } from "next/navigation";
 import { PostDate } from "./PostDate";
 import { PostHeading } from "./PostHeading";
 
@@ -10,7 +11,13 @@ type SinglePostProps = {
 
 export async function SinglePost({ params }: SinglePostProps) {
   const { slug } = await params;
-  const post = await findBySlugPublic(slug);
+  const postRes = await findPublicPostBySlugFromApi(slug);
+
+  if (!postRes.success) {
+    notFound();
+  }
+
+  const post = postRes.data;
 
   return (
     <article className="mb-16">
@@ -25,7 +32,7 @@ export async function SinglePost({ params }: SinglePostProps) {
         />
         <PostHeading href={`/post/${post.slug}`}>{post.title}</PostHeading>
         <p>
-          {post.author} | <PostDate dateTime={post.createdAt} />
+          {post.author.name} | <PostDate dateTime={post.createdAt} />
         </p>
       </header>
       <p className="text-xl mb-4 text-slate-600">{post.excerpt}</p>
