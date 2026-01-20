@@ -1,5 +1,5 @@
 import { SafeMarkdown } from "@/components/SafeMarkdown";
-import { findBySlugPublic } from "@/features/post/lib/schemas";
+import { findBySlugPublic } from "@/features/post/lib/queries";
 import Image from "next/image";
 import { PostDate } from "./PostDate";
 import { PostHeading } from "./PostHeading";

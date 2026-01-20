@@ -1,6 +1,6 @@
 import { ManagePostForm } from "@/features/admin/components/ManagePostForm";
 import { makePublicPostFromDb } from "@/features/post/dto/post";
-import { findByIdAdmin } from "@/features/post/lib/schemas";
+import { findByIdAdmin } from "@/features/post/lib/queries";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 

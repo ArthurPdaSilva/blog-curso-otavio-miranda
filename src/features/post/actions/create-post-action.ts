@@ -4,7 +4,7 @@ import {
   makePartialPublicPost,
   type PublicPost,
 } from "@/features/post/dto/post";
-import { PostCreateSchema } from "@/features/post/lib/validations";
+import { PostCreateSchema } from "@/features/post/lib/schemas";
 import type { PostModel } from "@/features/post/models/post-model";
 import { getZodErrorMessages } from "@/utils/get-zod-error-messages";
 import { makeSlugFromText } from "@/utils/make-slug-from-text";

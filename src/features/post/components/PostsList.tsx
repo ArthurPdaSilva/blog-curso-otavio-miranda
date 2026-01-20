@@ -1,4 +1,4 @@
-import { findAllPostsPublic } from "@/features/post/lib/schemas";
+import { findAllPostsPublic } from "../lib/queries";
 import { PostCoverImage } from "./PostCoverImage";
 import { PostSummary } from "./PostSummary";
 

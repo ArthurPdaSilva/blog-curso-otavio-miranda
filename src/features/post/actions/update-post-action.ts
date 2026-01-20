@@ -5,7 +5,7 @@ import {
   makePublicPostFromDb,
   type PublicPost,
 } from "@/features/post/dto/post";
-import { PostUpdateSchema } from "@/features/post/lib/validations";
+import { PostUpdateSchema } from "@/features/post/lib/schemas";
 import type { PostModel } from "@/features/post/models/post-model";
 import { getZodErrorMessages } from "@/utils/get-zod-error-messages";
 import { makeRandomString } from "@/utils/make-random-string";

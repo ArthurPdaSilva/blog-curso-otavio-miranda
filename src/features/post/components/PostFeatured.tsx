@@ -1,6 +1,6 @@
 /** biome-ignore-all assist/source/organizeImports: false positive */
 import ErrorMessage from "@/components/ErrorMessage";
-import { findAllPostsPublic } from "@/features/post/lib/schemas";
+import { findAllPostsPublic } from "@/features/post/lib/queries";
 import clsx from "clsx";
 import { PostCoverImage } from "./PostCoverImage";
 import { PostSummary } from "./PostSummary";
