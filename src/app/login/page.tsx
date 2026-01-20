@@ -1,5 +1,10 @@
-import { LoginForm } from "@/components/admin/LoginForm";
 import ErrorMessage from "@/components/ErrorMessage";
+import { LoginForm } from "@/components/LoginForm";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Login",
+};
 
 export default async function AdminLoginPage() {
   const allowLogin = Boolean(Number(process.env.ALLOW_LOGIN));
@@ -12,5 +17,6 @@ export default async function AdminLoginPage() {
       />
     );
   }
+
   return <LoginForm />;
 }

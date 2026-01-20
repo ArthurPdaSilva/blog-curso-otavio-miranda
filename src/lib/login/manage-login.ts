@@ -20,9 +20,9 @@ export async function verifyPassword(password: string, base64Hash: string) {
   return bcrypt.compare(password, hash);
 }
 
-export async function createLoginSession(username: string) {
+export async function createLoginSession(email: string) {
   const expiresAt = new Date(Date.now() + loginExpSeconds * 1000);
-  const loginSession = await signJwt({ username, expiresAt });
+  const loginSession = await signJwt({ email, expiresAt });
   const cookieStore = await cookies();
   cookieStore.set(loginCookieName, loginSession, {
     // Agora ele só pode ser lido pelo servidor
@@ -44,7 +44,7 @@ export async function deleteLoginSession() {
 }
 
 type JwtPayload = {
-  username: string;
+  email: string;
   expiresAt: Date;
 };
 
@@ -60,7 +60,7 @@ export async function verifyLoginSession() {
   const jwtPayload = await getLoginSession();
 
   if (!jwtPayload) return false;
-  return jwtPayload?.username === process.env.LOGIN_USER;
+  return jwtPayload?.email === process.env.LOGIN_USER;
 }
 
 export async function requireLoginSessionOrRedirect() {
@@ -91,5 +91,36 @@ export async function verifyJwt(jwt: string | undefined = "") {
   } catch {
     console.log("Invalid Token");
     return false;
+  }
+}
+
+export async function createLoginSessionFromApi(jwt: string) {
+  const expiresAt = new Date(Date.now() + loginExpSeconds * 1000);
+  const loginSession = jwt;
+  const cookieStore = await cookies();
+
+  cookieStore.set(loginCookieName, loginSession, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "strict",
+    expires: expiresAt,
+  });
+}
+
+export async function getLoginSessionForApi() {
+  const cookieStore = await cookies();
+
+  const jwt = cookieStore.get(loginCookieName)?.value;
+
+  if (!jwt) return false;
+
+  return jwt;
+}
+
+export async function requireLoginSessionForApiOrRedirect() {
+  const isAuthenticated = await getLoginSessionForApi();
+
+  if (!isAuthenticated) {
+    redirect("/login");
   }
 }

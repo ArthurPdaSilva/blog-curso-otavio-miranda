@@ -1,8 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server";
-import { verifyJwt } from "./lib/login/manage-login";
 
 export async function proxy(request: NextRequest) {
-  const isLoginPage = request.nextUrl.pathname.startsWith("/admin/login");
+  const isLoginPage = request.nextUrl.pathname.startsWith("/login");
   //   O config + matcher já resolve isso, mas essa linha de baixo é só por garantia
   const isAdminPage = request.nextUrl.pathname.startsWith("/admin");
 
@@ -20,9 +19,9 @@ export async function proxy(request: NextRequest) {
     process.env.LOGIN_COOKIE_NAME || "loginSession",
   )?.value;
 
-  const isAuthenticated = await verifyJwt(jwtSession);
+  const isAuthenticated = !!jwtSession;
   if (!isAuthenticated) {
-    const loginUrl = new URL("/admin/login", request.url);
+    const loginUrl = new URL("/login", request.url);
     return NextResponse.redirect(loginUrl);
   }
 }
