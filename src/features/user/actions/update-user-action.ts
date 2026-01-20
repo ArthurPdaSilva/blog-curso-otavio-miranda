@@ -81,6 +81,7 @@ export async function updateUserAction(
   // O nome de usuário (caso atualizado) só vai mudar
   // após o revalidate por conta do cache
   updateTag("posts");
+  // Basicamente a primeira request do user A vai salvar o caching da request, assim o user b quando for fazer a request, a request é carregada na hora
   updateTag("admin-posts");
 
   return {
