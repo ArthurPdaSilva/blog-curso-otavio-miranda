@@ -1,7 +1,7 @@
 "use client";
-import { loginAction } from "@/actions/login/login-action";
 import { Button } from "@/components/Button";
 import { InputText } from "@/components/InputText";
+import { loginAction } from "@/features/login/actions/login-action";
 import clsx from "clsx";
 import { LogInIcon } from "lucide-react";
 import Link from "next/link";

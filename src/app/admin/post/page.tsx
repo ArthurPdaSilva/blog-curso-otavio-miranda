@@ -1,5 +1,5 @@
-import { PostListAdmin } from "@/components/admin/PostListAdmin";
 import { SpinLoader } from "@/components/SpinLoader";
+import { PostListAdmin } from "@/features/admin/components/PostListAdmin";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 

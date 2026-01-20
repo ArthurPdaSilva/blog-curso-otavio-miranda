@@ -1,14 +1,14 @@
 "use client";
 
 import { InputText } from "@/components/InputText";
+import { createUserAction } from "@/features/user/actions/create-user-action";
+import { PublicUserSchema } from "@/features/user/lib/schema";
 import clsx from "clsx";
 import { UserRoundIcon } from "lucide-react";
 import Link from "next/link";
-import { Button } from "./Button";
 import { useActionState, useEffect } from "react";
-import { createUserAction } from "@/actions/user/create-user-action";
-import { PublicUserSchema } from "@/lib/user/schema";
 import { toast } from "react-toastify";
+import { Button } from "./Button";
 
 export function CreateUserForm() {
   const [state, action, isPending] = useActionState(createUserAction, {

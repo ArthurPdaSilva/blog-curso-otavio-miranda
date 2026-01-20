@@ -1,6 +1,6 @@
-import { SinglePost } from "@/components/Post/SinglePost";
 import { SpinLoader } from "@/components/SpinLoader";
-import { findBySlugPublic } from "@/lib/queries";
+import { SinglePost } from "@/features/post/components/SinglePost";
+import { findBySlugPublic } from "@/features/post/lib/schemas";
 import type { Metadata } from "next";
 import { Suspense } from "react";
 

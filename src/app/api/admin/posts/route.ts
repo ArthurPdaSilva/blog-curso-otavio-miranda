@@ -1,5 +1,5 @@
-import { PostModel } from "@/models/post/post-model";
-import { postRepository } from "@/repositories/post";
+import type { PostModel } from "@/features/post/models/post-model";
+import { postRepository } from "@/features/post/repositories";
 import { NextResponse } from "next/server";
 
 // GET /api/admin/posts

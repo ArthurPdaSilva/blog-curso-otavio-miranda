@@ -1,5 +1,5 @@
-import { MenuAdmin } from "@/components/admin/MenuAdmin";
-import { requireLoginSessionForApiOrRedirect } from "@/lib/login/manage-login";
+import { MenuAdmin } from "@/features/admin/components/MenuAdmin";
+import { requireLoginSessionForApiOrRedirect } from "@/features/login/lib/manage-login";
 
 type AdminPostLayoutProps = {
   children: React.ReactNode;

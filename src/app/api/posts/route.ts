@@ -1,4 +1,4 @@
-import { postRepository } from "@/repositories/post";
+import { postRepository } from "@/features/post/repositories";
 import { NextResponse } from "next/server";
 
 export async function GET() {
